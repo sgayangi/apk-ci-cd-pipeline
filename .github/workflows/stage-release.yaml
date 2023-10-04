@@ -1,0 +1,41 @@
+name: Release Stage API.
+on:
+  workflow_dispatch: 
+    inputs:
+      apiName:
+        description: 'API Name'
+        required: true
+        type: string
+      apiVersion:
+        description: 'API Version'
+        required: true
+        type: string
+concurrency:
+  group: dev-${{ github.event.number || github.run_id }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout apiBases
+        uses: actions/checkout@v4
+        with:
+          path: api-bases
+      - name: Checkout staging repo
+        uses: actions/checkout@v4
+        with:
+          path: stage
+      - name: set k8s context
+        uses: azure/k8s-set-context@v1
+        with:
+          method:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+      - name: install kapp
+        run: |
+          wget -O- https://carvel.dev/install.sh > install.sh
+          chmod +x install.sh
+          ./install.sh
+          kapp version
+      - name: Run API Deployment for ${{ github.event.inputs.apiName }} ${{ github.event.inputs.apiVersion }}
+        run: |
+          cd stage/${{ github.event.inputs.apiName }}/${{ github.event.inputs.apiVersion }}
+          kapp -y deploy -a ${{ github.event.inputs.apiName }} -f <(kustomize build .) -n apk-stage --labels version=${{ github.event.inputs.apiVersion }}

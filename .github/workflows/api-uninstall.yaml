@@ -1,0 +1,46 @@
+name: Uninstall API.
+on:
+  workflow_dispatch: 
+    inputs:
+      apiName:
+        description: 'API Name'
+        required: true
+        type: string
+      apiVersion:
+        description: 'API Version'
+        required: true
+        type: string
+      environment:
+        description: 'Environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+concurrency:
+  group: dev-${{ github.event.number || github.run_id }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: set k8s context
+        uses: azure/k8s-set-context@v1
+        with:
+          method:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+      - name: install kapp
+        run: |
+          wget -O- https://carvel.dev/install.sh > install.sh
+          chmod +x install.sh
+          ./install.sh
+          kapp version
+      - name: Run API Deployment for ${{ github.event.inputs.apiName }} ${{ github.event.inputs.apiVersion }}
+        if: github.event.inputs.environment == 'dev'
+        run: |
+          appName=$(echo ${{ github.event.inputs.apiName }}-${{ github.event.inputs.apiVersion }}|md5sum| cut -d ' ' -f 1)
+          kapp -y deploy -a $appName -f <(kustomize build .) -n apk-dev --labels version=${{ github.event.inputs.apiVersion }}
+      - name: Run API Deployment for ${{ github.event.inputs.apiName }} ${{ github.event.inputs.apiVersion }}
+        if: github.event.inputs.environment == 'staging'
+        run: |
+          appName=$(echo ${{ github.event.inputs.apiName }}-${{ github.event.inputs.apiVersion }}|md5sum| cut -d ' ' -f 1)
+          kapp -y deploy -a $appName -f <(kustomize build .) -n apk-stage --labels version=${{ github.event.inputs.apiVersion }}
