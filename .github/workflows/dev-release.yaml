@@ -27,7 +27,7 @@ jobs:
       - name: set k8s context
         uses: azure/k8s-set-context@v1
         with:
-          method:
+          method: kubeconfig
           kubeconfig: ${{ secrets.KUBE_CONFIG }}
       - name: install kapp
         run: |
