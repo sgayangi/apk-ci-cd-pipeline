@@ -38,9 +38,9 @@ jobs:
         if: github.event.inputs.environment == 'dev'
         run: |
           appName=$(echo ${{ github.event.inputs.apiName }}-${{ github.event.inputs.apiVersion }}|md5sum| cut -d ' ' -f 1)
-          kapp -y deploy -a $appName -f <(kustomize build .) -n apk-dev --labels version=${{ github.event.inputs.apiVersion }}
+          kapp -y delete -a $appName  --app-namespace apk-dev
       - name: Run API Deployment for ${{ github.event.inputs.apiName }} ${{ github.event.inputs.apiVersion }}
         if: github.event.inputs.environment == 'staging'
         run: |
           appName=$(echo ${{ github.event.inputs.apiName }}-${{ github.event.inputs.apiVersion }}|md5sum| cut -d ' ' -f 1)
-          kapp -y deploy -a $appName -f <(kustomize build .) -n apk-stage --labels version=${{ github.event.inputs.apiVersion }}
+          kapp -y delete -a $appName  --app-namespace apk-stage
