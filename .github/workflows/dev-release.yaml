@@ -19,10 +19,12 @@ jobs:
       - name: Checkout apiBases
         uses: actions/checkout@v4
         with:
+          ref: main
           path: api-bases
       - name: Checkout dev repository
         uses: actions/checkout@v4
         with:
+          ref: dev
           path: dev
       - name: set k8s context
         uses: azure/k8s-set-context@v1
