@@ -38,4 +38,5 @@ jobs:
       - name: Run API Deployment for ${{ github.event.inputs.apiName }} ${{ github.event.inputs.apiVersion }}
         run: |
           cd stage/${{ github.event.inputs.apiName }}/${{ github.event.inputs.apiVersion }}
-          kapp -y deploy -a ${{ github.event.inputs.apiName }} -f <(kustomize build .) -n apk-stage --labels version=${{ github.event.inputs.apiVersion }}
+          appName=$(echo ${{ github.event.inputs.apiName }}-${{ github.event.inputs.apiVersion }}|md5sum| cut -d ' ' -f 1)
+          kapp -y deploy -a $appName -f <(kustomize build .) -n apk-stage --labels version=${{ github.event.inputs.apiVersion }}
