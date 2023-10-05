@@ -114,5 +114,5 @@ Configure GitHub Actions to Deploy API to Dev and Stage Environments
 4. Click on the "Run workflow" button.
 5. Once completed, you will be able to see the workflow run as shown below.
    
-![dev](https://github.com/tharindu1st/apk-ci-cd-pipeline/assets/6345931/5e9b5e9e-ddc9-453b-9359-dce3eb6361b3)
-   
+   ![dev](https://github.com/tharindu1st/apk-ci-cd-pipeline/assets/6345931/4b9030c8-010d-403d-bdc2-44de0ce9f212)
+
