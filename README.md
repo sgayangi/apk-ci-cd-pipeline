@@ -159,23 +159,23 @@ kubectl get svc apk-dev-wso2-apk-gateway-service -n apk-dev
 
 6. Test the API by sending a request to the stage environment.
 </br>
-6.1 Retrieve the dev environment's EXTERNAL-IP address.
+6.1 Retrieve the staging environment's EXTERNAL-IP address.
 </br>
 
-    ```
-    kubectl get svc apk-dev-wso2-apk-gateway-service -n apk-stage
+    ```console
+        kubectl get svc apk-dev-wso2-apk-gateway-service -n apk-stage
     ```
     6.2 Create etc host entry for the dev environment's EXTERNAL-IP address.
 </br>
 
-    ```
+    ```console
      sudo echo "EXTERNAL-IP dev.gw.wso2.com" >> /etc/hosts
     ``` 
     6.3 Generate a token from IDP as per https://apk.docs.wso2.com/en/latest/develop-and-deploy-api/security/generate-access-token/
     6.4 Send a request to the API.
 </br>
 
-    ```sh
+    ```console
     curl --location 'https://stage.gw.wso2.com:9095/greetingAPI/1.0.0/greeting?name=abce' \
     --header 'Authorization: Bearer <accessToken>’'
     ```
