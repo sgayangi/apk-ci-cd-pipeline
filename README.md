@@ -120,6 +120,7 @@ Configure GitHub Actions to Deploy API to Dev and Stage Environments
 </br>
   6.1 Retrieve the dev environment's EXTERNAL-IP address.
 </br>
+
 ```console
 kubectl get svc apk-dev-wso2-apk-gateway-service -n apk-dev
 ```
@@ -131,8 +132,10 @@ kubectl get svc apk-dev-wso2-apk-gateway-service -n apk-dev
 ```
 
   6.3 Generate a token from IDP as per https://apk.docs.wso2.com/en/latest/develop-and-deploy-api/security/generate-access-token/
+    </br>
   6.4 Send a request to the API.
   </br>
+
 ```console
   curl --location 'https://dev.gw.wso2.com:9095/greetingAPI/1.0.0/greeting?name=abce' \
   --header 'Authorization: Bearer <accessToken>’'
