@@ -118,25 +118,27 @@ Configure GitHub Actions to Deploy API to Dev and Stage Environments
 
 6. Test the API by sending a request to the dev environment.
 </br>
-6.1 Retrieve the dev environment's EXTERNAL-IP address.
-</br>
+  6.1 Retrieve the dev environment's EXTERNAL-IP address.
     ```
-      kubectl get svc apk-dev-wso2-apk-gateway-service -n apk-dev
+    kubectl get svc apk-dev-wso2-apk-gateway-service -n apk-dev
     ```
-    6.2 Create etc host entry for the dev environment's EXTERNAL-IP address.
-    ```
-    sudo echo "EXTERNAL-IP dev.gw.wso2.com" >> /etc/hosts
-    ```
-    6.3 Generate a token from IDP as per https://apk.docs.wso2.com/en/latest/develop-and-deploy-api/security/generate-access-token/
-    6.4 Send a request to the API.
-    ```
-    curl --location 'https://dev.gw.wso2.com:9095/greetingAPI/1.0.0/greeting?name=abce' \
-    --header 'Authorization: Bearer <accessToken>’'
-    ```
-    We will receive the following response.
-    ```
-    Hello, abce from dev environment!
-    ```
+  6.2 Create etc host entry for the dev environment's EXTERNAL-IP address.
+  </br>
+  ```        
+  sudo echo "EXTERNAL-IP dev.gw.wso2.com" >> /etc/hosts
+  ```
+  6.3 Generate a token from IDP as per https://apk.docs.wso2.com/en/latest/develop-and-deploy-api/security/generate-access-token/
+  6.4 Send a request to the API.
+  </br>
+  ```
+  curl --location 'https://dev.gw.wso2.com:9095/greetingAPI/1.0.0/greeting?name=abce' \
+  --header 'Authorization: Bearer <accessToken>’'
+  ```
+  We will receive the following response.
+  </br>
+  ```
+  Hello, abce from dev environment!
+  ```
 ## Deploy the API to the dev environment and test
 1. Go to the Actions under your forked repository.
 2. Select the workflow called "Release DEV API."
