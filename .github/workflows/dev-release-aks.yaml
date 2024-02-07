@@ -1,13 +1,13 @@
-name: Release DEV API
+name: Release DEV API.
 on:
-  workflow_dispatch:
+  workflow_dispatch: 
     inputs:
       apiName:
-        description: "API Name"
+        description: 'API Name'
         required: true
         type: string
       apiVersion:
-        description: "API Version"
+        description: 'API Version'
         required: true
         type: string
 concurrency:
@@ -26,11 +26,12 @@ jobs:
         with:
           ref: dev
           path: dev
-      - name: Setup Kubeconfig
-        run: |
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > ${{ github.workspace }}/kubeconfig
-          export KUBECONFIG=${{ github.workspace }}/kubeconfig
-      - name: Install kapp
+      - name: set k8s context
+        uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+      - name: install kapp
         run: |
           wget -O- https://carvel.dev/install.sh > install.sh
           chmod +x install.sh
@@ -40,6 +41,4 @@ jobs:
         run: |
           cd dev/${{ github.event.inputs.apiName }}/${{ github.event.inputs.apiVersion }}
           appName=$(echo ${{ github.event.inputs.apiName }}-${{ github.event.inputs.apiVersion }}|md5sum| cut -d ' ' -f 1)
-          kapp deploy -y -a $appName -f <(kustomize build .) -n apk-dev --labels version=${{ github.event.inputs.apiVersion }}
-        env:
-          KUBECONFIG: ${{ github.workspace }}/kubeconfig
+          kapp -y deploy -a $appName -f <(kustomize build .) -n apk-dev --labels version=${{ github.event.inputs.apiVersion }}
