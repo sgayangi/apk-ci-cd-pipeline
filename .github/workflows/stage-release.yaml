@@ -1,15 +1,9 @@
-name: Release Stage API.
+name: Release Stage API
 on:
-  workflow_dispatch: 
-    inputs:
-      apiName:
-        description: 'API Name'
-        required: true
-        type: string
-      apiVersion:
-        description: 'API Version'
-        required: true
-        type: string
+  pull_request:
+    branches:
+      - stage
+    types: [closed]
 concurrency:
   group: dev-${{ github.event.number || github.run_id }}
 jobs:
@@ -37,8 +31,10 @@ jobs:
           chmod +x install.sh
           ./install.sh
           kapp version
-      - name: Run API Deployment for ${{ github.event.inputs.apiName }} ${{ github.event.inputs.apiVersion }}
+      - name: Run API Deployment for greetingAPI 1.0.0
         run: |
-          cd stage/${{ github.event.inputs.apiName }}/${{ github.event.inputs.apiVersion }}
-          appName=$(echo ${{ github.event.inputs.apiName }}-${{ github.event.inputs.apiVersion }}|md5sum| cut -d ' ' -f 1)
-          kapp -y deploy -a $appName -f <(kustomize build .) -n apk-stage --labels version=${{ github.event.inputs.apiVersion }}
+          apiName="greetingAPI"
+          apiVersion="1.0.0"
+          cd stage/${{ apiName }}/${{ apiVersion }}
+          appName=$(echo ${{ apiName }}-${{ apiVersion }}|md5sum| cut -d ' ' -f 1)
+          kapp -y deploy -a $appName -f <(kustomize build .) -n apk-stage --labels version=${{ apiVersion }}
